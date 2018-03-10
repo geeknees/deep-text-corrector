@@ -128,7 +128,8 @@ def create_model(session, forward_only, model_path, config=TestConfig()):
         model.saver.restore(session, ckpt.model_checkpoint_path)
     else:
         print("Created model with fresh parameters.")
-        session.run(tf.initialize_all_variables())
+        session.run(tf.global_variables_initializer())
+
     return model
 
 
@@ -424,7 +425,7 @@ def main(_):
             print("Loaded model. Beginning decoding.")
             decodings = decode(session, model=model, data_reader=data_reader,
                                data_to_decode=data_reader.read_tokens(
-                                   FLAGS.test_path), verbose=False)
+                                   FLAGS.test_path), verbose=True)
             # Write the decoded tokens to stdout.
             for tokens in decodings:
                 print(" ".join(tokens))
